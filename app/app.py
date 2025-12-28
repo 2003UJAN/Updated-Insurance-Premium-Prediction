@@ -90,7 +90,7 @@ st_folium(m, width=700, height=400)
 st.subheader("🤖 AI Insurance Insight")
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model_gemini = genai.GenerativeModel("gemini-pro")
+model_gemini = genai.GenerativeModel("gemini-2.0-flash-lite")
 
 if st.button("Get Risk Insight"):
     response = model_gemini.generate_content(
