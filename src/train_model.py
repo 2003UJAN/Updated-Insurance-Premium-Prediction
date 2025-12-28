@@ -5,11 +5,18 @@ from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBRegressor
 from sklearn.metrics import r2_score
 
-df = pd.read_csv("/data/synthetic_insurance_premium_dataset.csv")
+# Load data
+df = pd.read_csv("/data/insurance_dataset.csv")
 
-cat_cols = ["city", "locality_category", "policy_type", "occupation_type"]
+# Categorical columns
+cat_cols = [
+    "city", "locality_category", "locality",
+    "occupation_type", "policy_type",
+    "natural_disaster_risk", "terrain_type",
+    "urban_flood_risk"
+]
+
 encoders = {}
-
 for col in cat_cols:
     le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
@@ -24,17 +31,19 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 model = XGBRegressor(
     n_estimators=300,
-    max_depth=6,
-    learning_rate=0.08,
+    max_depth=7,
+    learning_rate=0.07,
     subsample=0.9,
-    colsample_bytree=0.9
+    colsample_bytree=0.9,
+    random_state=42
 )
 
 model.fit(X_train, y_train)
 
-pred = model.predict(X_test)
-print("R2 Score:", r2_score(y_test, pred))
+preds = model.predict(X_test)
+print("R2 Score:", r2_score(y_test, preds))
 
-joblib.dump(model, "../app/model.pkl")
-joblib.dump(encoders, "../app/encoders.pkl")
+joblib.dump(model, "/app/model.pkl")
+joblib.dump(encoders, "/app/encoders.pkl")
+
 
