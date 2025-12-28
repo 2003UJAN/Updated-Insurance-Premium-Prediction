@@ -6,7 +6,7 @@ import shap
 model = joblib.load("/app/model.pkl")
 encoders = joblib.load("/app/encoders.pkl")
 
-df = pd.read_csv("../data/insurance_dataset.csv")
+df = pd.read_csv("/data/insurance_dataset.csv")
 
 cat_cols = encoders.keys()
 for col in cat_cols:
