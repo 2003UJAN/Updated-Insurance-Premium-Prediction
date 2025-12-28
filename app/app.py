@@ -9,8 +9,13 @@ import google.generativeai as genai
 # -------------------------------
 # Load model
 # -------------------------------
-model = joblib.load("model.pkl")
-encoders = joblib.load("encoders.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
+ENCODER_PATH = os.path.join(BASE_DIR, "encoders.pkl")
+
+model = joblib.load(MODEL_PATH)
+encoders = joblib.load(ENCODER_PATH)
 
 st.set_page_config("Insurance Premium Predictor", layout="wide")
 st.title("🏥 Insurance Premium Prediction System")
