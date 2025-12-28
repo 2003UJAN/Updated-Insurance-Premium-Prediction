@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import shap
 import folium
+import os
 from streamlit_folium import st_folium
 import google.generativeai as genai
 
