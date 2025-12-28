@@ -89,13 +89,34 @@ st_folium(m, width=700, height=400)
 # -------------------------------
 st.subheader("🤖 AI Insurance Insight")
 
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model_gemini = genai.GenerativeModel('gemini-2.0-flash-lite')
+try:
+    if "GEMINI_API_KEY" not in st.secrets:
+        st.warning("Gemini API key not found. Please configure it in Streamlit secrets.")
+    else:
+        genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-if st.button("Get Risk Insight"):
-    response = model_gemini.generate_content(
-        f"Explain insurance risk for a {age}-year-old in {city}, "
-        f"{locality} area, smoker={smoker}, BMI={bmi}"
-    )
-    st.write(response.text)
+        # ✅ Correct model name
+        gemini_model = genai.GenerativeModel("models/gemini-2.0-flash-lite")
 
+        if st.button("Get Risk Insight"):
+            with st.spinner("Generating AI insight..."):
+                prompt = f"""
+                Explain insurance risk in simple, non-technical terms for:
+                - Age: {age}
+                - City: {city}
+                - Locality: {locality}
+                - Smoker: {smoker}
+                - BMI: {bmi}
+                - Sum Insured: {sum_insured}
+
+                Also suggest how the premium risk could be reduced.
+                """
+
+                response = gemini_model.generate_content(prompt)
+
+                st.success("AI Insight Generated")
+                st.write(response.text)
+
+except Exception as e:
+    st.error("Gemini API call failed.")
+    st.exception(e)
