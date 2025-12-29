@@ -15,8 +15,8 @@ st.title("🏥 Insurance Premium Prediction System")
 # --------------------------------------------------
 # Load model & encoders (same directory as app.py)
 # --------------------------------------------------
-model = joblib.load("model.pkl")
-encoders = joblib.load("encoders.pkl")
+model = joblib.load("/app/model.pkl")
+encoders = joblib.load("/app/encoders.pkl")
 
 # --------------------------------------------------
 # Load dataset (for column reference & defaults)
