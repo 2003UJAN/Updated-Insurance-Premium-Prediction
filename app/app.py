@@ -4,7 +4,17 @@ import joblib
 import os
 
 # --------------------------------------------------
-# Absolute paths (Streamlit Cloud safe)
+# Streamlit page config
+# --------------------------------------------------
+st.set_page_config(
+    page_title="Insurance Premium Prediction",
+    layout="wide"
+)
+
+st.title("🏥 Insurance Premium Prediction System")
+
+# --------------------------------------------------
+# Resolve paths CORRECTLY (based on your screenshot)
 # --------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -13,14 +23,14 @@ ENCODER_PATH = os.path.join(BASE_DIR, "encoders.pkl")
 DATA_PATH = os.path.join(BASE_DIR, "..", "data", "insurance_dataset.csv")
 
 # --------------------------------------------------
-# Load artifacts
+# Load model, encoders, dataset
 # --------------------------------------------------
 model = joblib.load(MODEL_PATH)
 encoders = joblib.load(ENCODER_PATH)
 df = pd.read_csv(DATA_PATH)
 
 # --------------------------------------------------
-# Sidebar – User Inputs
+# Sidebar Inputs
 # --------------------------------------------------
 st.sidebar.header("📋 Policyholder Details")
 
@@ -65,6 +75,7 @@ urban_flood = st.sidebar.selectbox(
 )
 
 age = st.sidebar.slider("Age", 18, 70, 35)
+
 annual_income = st.sidebar.number_input(
     "Annual Income (INR)",
     min_value=0,
@@ -93,9 +104,9 @@ credit_score = st.sidebar.slider(
 )
 
 # --------------------------------------------------
-# Build input dataframe
+# Build input dataframe safely
 # --------------------------------------------------
-# Use a template row to ensure all columns exist
+# Take a template row so all columns exist
 input_df = df.sample(1).drop("annual_premium", axis=1)
 
 # Encode categorical inputs
@@ -108,7 +119,7 @@ input_df["natural_disaster_risk"] = encoders["natural_disaster_risk"].transform(
 input_df["terrain_type"] = encoders["terrain_type"].transform([terrain])[0]
 input_df["urban_flood_risk"] = encoders["urban_flood_risk"].transform([urban_flood])[0]
 
-# Numerical inputs
+# Numerical fields
 input_df["age"] = age
 input_df["annual_income"] = annual_income
 input_df["bmi"] = bmi
@@ -128,8 +139,7 @@ if st.button("Predict Annual Premium"):
     st.success(f"💰 Estimated Annual Premium: ₹{premium:,.0f}")
 
 # --------------------------------------------------
-# Optional: Show input summary
+# Debug / transparency (optional)
 # --------------------------------------------------
-with st.expander("🔍 View Input Data Used for Prediction"):
+with st.expander("🔍 View Model Input"):
     st.dataframe(input_df)
-
