@@ -1,27 +1,23 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # --------------------------------------------------
-# Page config
+# Absolute paths (Streamlit Cloud safe)
 # --------------------------------------------------
-st.set_page_config(
-    page_title="Insurance Premium Prediction",
-    layout="wide"
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-st.title("🏥 Insurance Premium Prediction System")
-
-# --------------------------------------------------
-# Load model & encoders (same directory as app.py)
-# --------------------------------------------------
-model = joblib.load("/app/model.pkl")
-encoders = joblib.load("/app/encoders.pkl")
+MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
+ENCODER_PATH = os.path.join(BASE_DIR, "encoders.pkl")
+DATA_PATH = os.path.join(BASE_DIR, "..", "data", "insurance_dataset.csv")
 
 # --------------------------------------------------
-# Load dataset (for column reference & defaults)
+# Load artifacts
 # --------------------------------------------------
-df = pd.read_csv("/data/insurance_dataset.csv")
+model = joblib.load(MODEL_PATH)
+encoders = joblib.load(ENCODER_PATH)
+df = pd.read_csv(DATA_PATH)
 
 # --------------------------------------------------
 # Sidebar – User Inputs
